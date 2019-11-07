@@ -14,11 +14,10 @@ install:
 		sudo cp $(BASECONFDIR)/$(APPNAME).conf $(CONFDIR)/;\
 		sudo cp $(BASECONFDIR)/print_cookie.py $(CONFDIR)/;\
 		sudo cp $(BASESERVICEFILEDIR)/$(APPNAME).service $(SERVICEFILEDIR)/;\
-		virtualenv -p $(PYTHON) ./tmp/$(APPNAME);\
-		sudo ./tmp/$(APPNAME)/bin/python setup sdist;\
-		sudo ./tmp/$(APPNAME)/bin/pip install dist/$(APPNAME)*;\
-		sudo cp -r ./tmp/$(APPNAME) $(INSTALLDIR);\
-		sudo rm -rf ./tmp;\
+		virtualenv -p $(PYTHON) $(INSTALLDIR)/$(APPNAME);\
+		sudo $(INSTALLDIR)/$(APPNAME)/bin/python setup sdist;\
+		sudo $(INSTALLDIR)/$(APPNAME)/bin/pip install dist/$(APPNAME)*;\
+		sudo rm -rf ./dist
 	fi
 uninstall:
 	sudo systemctl stop iksmproxy3
@@ -27,9 +26,10 @@ uninstall:
 	sudo rm -f $(SERVICEFILEDIR)/$(APPNAME).service
 package:
 	mkdir -p $(DEB_WORKDIR)$(INSTALLDIR)
-	virtualenv -p $(PYTHON) $(DEB_WORKDIR)$(INSTALLDIR)/$(APPNAME)
-	$(DEB_WORKDIR)$(INSTALLDIR)/$(APPNAME)/bin/python setup.py sdist
-	$(DEB_WORKDIR)$(INSTALLDIR)/$(APPNAME)/bin/pip install dist/$(APPNAME)*
+	sudo virtualenv -p $(PYTHON) $(INSTALLDIR)/$(APPNAME)
+	sudo $(INSTALLDIR)/$(APPNAME)/bin/python setup.py sdist
+	sudo $(INSTALLDIR)/$(APPNAME)/bin/pip install dist/$(APPNAME)*
+	sudo cp -r $(INSTALLDIR)/$(APPNAME) $(DEB_WORKDIR)$(INSTALLDIR)
 	mkdir -p $(DEB_WORKDIR)$(CONFDIR)
 	cp $(BASECONFDIR)/$(APPNAME).conf $(DEB_WORKDIR)$(CONFDIR)/_$(APPNAME).conf
 	cp $(BASECONFDIR)/print_cookie.py $(DEB_WORKDIR)$(CONFDIR)/
@@ -37,5 +37,6 @@ package:
 	cp $(BASESERVICEFILEDIR)/$(APPNAME).service $(DEB_WORKDIR)$(SERVICEFILEDIR)
 	cp -r DEBIAN $(DEB_WORKDIR)
 	fakeroot dpkg-deb --build $(DEB_WORKDIR) .
-	rm -rf $(DEB_WORKDIR)
-	rm -rf ./dist
+	sudo rm -rf $(DEB_WORKDIR)
+	sudo rm -rf ./dist
+	sudo rm -rf $(INSTALLDIR)/$(APPNAME)
