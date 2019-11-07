@@ -1,0 +1,5 @@
+Version: 1.0.0
+Package: iksmproxy3
+Architecture: armhf
+Maintainer: Take2 <@SayYeah1121>
+Description: proxy server for splatoon2

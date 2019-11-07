@@ -1,0 +1,12 @@
+[Unit]
+Description=iksmproxy3
+After=network.target
+
+[Service]
+User=root
+ExecStart=/opt/iksmproxy3/bin/iksmproxy3
+ExecStop=/bin/kill -INT ${MAINPID}
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
