@@ -1,6 +1,6 @@
 APPNAME=iksmproxy3
 CONFDIR=/etc/iksmproxy3
-PYTHON=python3.7
+PYTHON=python3.6
 INSTALLDIR=/opt
 SERVICEFILEDIR=/usr/lib/systemd/system
 BASECONFDIR=./etc/iksmproxy3
